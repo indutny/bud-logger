@@ -1,0 +1,6 @@
+[submodule "tools/gyp"]
+	path = tools/gyp
+	url = https://chromium.googlesource.com/external/gyp.git
+[submodule "deps/bud"]
+	path = deps/bud
+	url = git://github.com/indutny/bud.git
