@@ -23,8 +23,8 @@ void handshake(bud_trace_client_t* client) {
   fprintf(
       stderr,
       "new frontend connection "
-          "id=%d remote=%s:%d protocol=%s cipher=%s sni=%s\n",
-      client->fd,
+          "id=%llu remote=%s:%d protocol=%s cipher=%s sni=%s\n",
+      client->id,
       client->host,
       client->port,
       ver,
@@ -46,14 +46,45 @@ void backend_connect(bud_trace_client_t* client, bud_trace_backend_t* back) {
 
   fprintf(
       stderr,
-      "connecting to backend id=%d balance=%s host=%s port=%d\n",
-      client->fd,
+      "connecting to backend id=%llu balance=%s host=%s port=%d\n",
+      client->id,
       balance,
       back->host,
       back->port);
 }
 
+
+void kill_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
+  fprintf(
+      stderr,
+      "killed backend id=%llu host=%s port=%d\n",
+      client->id,
+      back->host,
+      back->port);
+}
+
+
+void revive_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
+  fprintf(
+      stderr,
+      "revived backend host=%s port=%d\n",
+      client->id,
+      back->host,
+      back->port);
+}
+
+
+void retry(bud_trace_client_t* client) {
+  fprintf(
+      stderr,
+      "backend still dead, retrying id=%llu\n",
+      client->id);
+}
+
 BUD_TRACE_MODULE = {
   .handshake = handshake,
-  .backend_connect = (bud_trace_cb_t) backend_connect
+  .backend_connect = backend_connect,
+  .kill_backend = kill_backend,
+  .revive_backend = revive_backend,
+  .retry = retry
 };
