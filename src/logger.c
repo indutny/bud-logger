@@ -3,7 +3,7 @@
 #include "bud/tracing.h"
 #include "openssl/ssl.h"
 
-void handshake(bud_trace_client_t* client) {
+void on_handshake(bud_trace_client_t* client) {
   const char* sni;
   const char* ver;
 
@@ -32,7 +32,7 @@ void handshake(bud_trace_client_t* client) {
       sni);
 }
 
-void backend_connect(bud_trace_client_t* client, bud_trace_backend_t* back) {
+void on_backend_connect(bud_trace_client_t* client, bud_trace_backend_t* back) {
   const char* balance;
 
   if (back->sni_match) {
@@ -54,7 +54,7 @@ void backend_connect(bud_trace_client_t* client, bud_trace_backend_t* back) {
 }
 
 
-void kill_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
+void on_kill_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
   fprintf(
       stderr,
       "killed backend id=%llu host=%s port=%d\n",
@@ -64,27 +64,40 @@ void kill_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
 }
 
 
-void revive_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
+void on_revive_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
   fprintf(
       stderr,
-      "revived backend host=%s port=%d\n",
+      "revived backend id=%llu host=%s port=%d\n",
       client->id,
       back->host,
       back->port);
 }
 
 
-void retry(bud_trace_client_t* client) {
+void on_retry(bud_trace_client_t* client) {
   fprintf(
       stderr,
       "backend still dead, retrying id=%llu\n",
       client->id);
 }
 
+
+void on_close(bud_trace_client_t* client, bud_error_t err) {
+  fprintf(
+      stderr,
+      "client close id=%llu, reason: %s\n",
+      client->id,
+      bud_error_to_str(err));
+}
+
+
 BUD_TRACE_MODULE = {
-  .handshake = handshake,
-  .backend_connect = backend_connect,
-  .kill_backend = kill_backend,
-  .revive_backend = revive_backend,
-  .retry = retry
+  .version = BUD_TRACE_VERSION,
+
+  .handshake = on_handshake,
+  .backend_connect = on_backend_connect,
+  .kill_backend = on_kill_backend,
+  .revive_backend = on_revive_backend,
+  .retry = on_retry,
+  .close = on_close
 };
