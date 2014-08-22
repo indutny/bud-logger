@@ -3,7 +3,7 @@
 ## Build instructions
 
 ```bash
-git clone --recursive git@github.com:voxer/bud-logger
+git clone --recursive git://github.com/indutny/bud-logger
 cd bud-logger
 ./gyp_logger
 make -C out/ -j24
