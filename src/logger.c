@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "bud/tracing.h"
+#include "bud/logger.h"
 #include "openssl/ssl.h"
 
 void on_handshake(bud_trace_client_t* client) {
@@ -20,8 +21,9 @@ void on_handshake(bud_trace_client_t* client) {
   else
     ver = "ssl3";
 
-  fprintf(
-      stderr,
+  bud_log(
+      client->logger,
+      kBudLogInfo,
       "new frontend connection "
           "id=%llu remote=%s:%d protocol=%s cipher=%s sni=%s\n",
       client->id,
@@ -44,8 +46,9 @@ void on_backend_connect(bud_trace_client_t* client, bud_trace_backend_t* back) {
     }
   }
 
-  fprintf(
-      stderr,
+  bud_log(
+      client->logger,
+      kBudLogInfo,
       "connecting to backend id=%llu balance=%s host=%s port=%d\n",
       client->id,
       balance,
@@ -55,8 +58,9 @@ void on_backend_connect(bud_trace_client_t* client, bud_trace_backend_t* back) {
 
 
 void on_kill_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
-  fprintf(
-      stderr,
+  bud_log(
+      client->logger,
+      kBudLogWarning,
       "killed backend id=%llu host=%s port=%d\n",
       client->id,
       back->host,
@@ -65,8 +69,9 @@ void on_kill_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
 
 
 void on_revive_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
-  fprintf(
-      stderr,
+  bud_log(
+      client->logger,
+      kBudLogInfo,
       "revived backend id=%llu host=%s port=%d\n",
       client->id,
       back->host,
@@ -75,16 +80,18 @@ void on_revive_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
 
 
 void on_retry(bud_trace_client_t* client) {
-  fprintf(
-      stderr,
+  bud_log(
+      client->logger,
+      kBudLogWarning,
       "backend still dead, retrying id=%llu\n",
       client->id);
 }
 
 
 void on_close(bud_trace_client_t* client, bud_error_t err) {
-  fprintf(
-      stderr,
+  bud_log(
+      client->logger,
+      kBudLogInfo,
       "client close id=%llu, reason: %s\n",
       client->id,
       bud_error_to_str(err));
