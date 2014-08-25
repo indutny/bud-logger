@@ -25,7 +25,7 @@ void on_handshake(bud_trace_client_t* client) {
       client->logger,
       kBudLogInfo,
       "new frontend connection "
-          "id=%llu remote=%s:%d protocol=%s cipher=%s sni=%s\n",
+          "id=%llu remote=%s:%d protocol=%s cipher=%s sni=%s",
       client->id,
       client->host,
       client->port,
@@ -49,7 +49,7 @@ void on_backend_connect(bud_trace_client_t* client, bud_trace_backend_t* back) {
   bud_log(
       client->logger,
       kBudLogInfo,
-      "connecting to backend id=%llu balance=%s host=%s port=%d\n",
+      "connecting to backend id=%llu balance=%s host=%s port=%d",
       client->id,
       balance,
       back->host,
@@ -61,7 +61,7 @@ void on_kill_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
   bud_log(
       client->logger,
       kBudLogWarning,
-      "killed backend id=%llu host=%s port=%d\n",
+      "killed backend id=%llu host=%s port=%d",
       client->id,
       back->host,
       back->port);
@@ -72,7 +72,7 @@ void on_revive_backend(bud_trace_client_t* client, bud_trace_backend_t* back) {
   bud_log(
       client->logger,
       kBudLogInfo,
-      "revived backend id=%llu host=%s port=%d\n",
+      "revived backend id=%llu host=%s port=%d",
       client->id,
       back->host,
       back->port);
@@ -83,7 +83,7 @@ void on_retry(bud_trace_client_t* client) {
   bud_log(
       client->logger,
       kBudLogWarning,
-      "backend still dead, retrying id=%llu\n",
+      "backend still dead, retrying id=%llu",
       client->id);
 }
 
@@ -92,7 +92,7 @@ void on_close(bud_trace_client_t* client, bud_error_t err) {
   bud_log(
       client->logger,
       kBudLogInfo,
-      "client close id=%llu, reason: %s\n",
+      "client close id=%llu, reason: %s",
       client->id,
       bud_error_to_str(err));
 }
